@@ -1,0 +1,146 @@
+
+void main() {
+   reset(50, 50);
+   String color = choice_color();
+   String type = choice_type();
+   launch(0, -50, 50, type, color);
+}
+
+String choice_color() {
+   //demande la couleur a l'utilisateur et renvoie une variable String	
+    String color = readString("quelle couleur veux tu ?");
+   return  color;
+}
+
+String choice_type() {
+   String type = readString("quelle type de feu d'artifice veux tu ?");
+   return  type;
+}
+
+void launch(int x, int y, int height, String type, String color) {
+   //Lance un feu d'artifice
+    for (int h = y; h < y + height; h ++) {
+      setPixel(x, h, color);//cree un pixel
+      sleep(100);
+      setPixel(x, h, 255);//efface le pixel
+   }
+   //explode(x, y+height, type, color);
+    explode(x, y + height, type, color);
+}
+
+void explode(int x, int y, String type, String color) {
+   //simule l'explosion du feu d'artice 
+    switch(type) {
+      case "carre" : square(x, y, color);//fait un carre
+      break;
+      case "cercle" : circle(x, y, 30, color);//fait un cercle
+      break;
+      case "triangle" : triangle(x, y, color);//fait un triangle
+      break;
+      case "special" : special(x,y,color);//explosion special
+      break;
+   }
+}
+
+void square(int x, int y, String color) {
+   int b =0;
+   int c =0;
+   for (int i = 0; i < 6; i ++) {
+      //boucle pour agrandir la figure
+       b +=2;
+      for (int a = 0; a < b; a ++) {
+      	//boucle pour creer la figure
+         setPixel(x + i, y + i - a, color);
+         setPixel(x - i, y - i + a, color);
+         setPixel(x - i + a, y + i, color);
+         setPixel(x + i - a, y - i, color);
+         sleep(5);
+      }
+      sleep(200);//on attend 20 millisecondes avand d'effacer la figure
+      for (int a =0; a < b; a ++) {
+      	//boucle pour effacer la figure
+         setPixel(x + i, y + i - a, "white");
+         setPixel(x - i, y - i + a, "white");
+         setPixel(x - i + a, y + i, "white");
+         setPixel(x + i - a, y - i, "white");
+         sleep(5);
+       }
+      sleep(200);
+   }
+}
+
+void circle(int x, int y, int radius, String color) {
+   circle2(x, y, 2, color);
+   sleep(200);
+   circle2(x, y, 2, "white");
+   circle2(x, y, 6, color);
+   sleep(200);
+   circle2(x, y, 6, "white");
+   circle2(x, y, 10, color);
+   sleep(200);
+   circle2(x, y, 10, "white");
+   circle2(x, y, 14, color);
+   sleep(200);
+   circle2(x, y, 14, "white");
+   //explode(x, y+height, type, color);
+}
+
+void circle2(int xCentre, int yCentre, int radius, String color) {
+   //Algorithme de tracé d'arc de cercle de Bresenham
+    for (int x = 0, y = radius, m = 5 -4 * radius; x <= y; x ++, m += 8 * x +4) {
+      setPixel(x + xCentre, y + yCentre, color);
+      setPixel(y + xCentre, x + yCentre, color);
+      setPixel( - x + xCentre, y + yCentre, color);
+      setPixel( - y + xCentre, x + yCentre, color);
+      setPixel(x + xCentre, - y + yCentre, color);
+      setPixel(y + xCentre, - x + yCentre, color);
+      setPixel( - x + xCentre, - y + yCentre, color);
+      setPixel( - y + xCentre, - x + yCentre, color);
+      if (m > 0) {
+         y --;
+         m -= 8 * y;
+      }
+   }
+}
+
+void special(int x, int y, String color) {
+   int b =0;
+   for (int i = 0; i < 6; i ++) {
+      // attention figure special comportant des erreurs de programmation 
+      //le code ne plante pas mais le resultat est cense etre un carre
+       b +=2;
+      for (int a = 0; a < b; a ++) {
+         setPixel(x + i, y + i - a, color);
+         setPixel(x - i, y - i + a, color);
+         setPixel(x - i + a, y + i, color);
+         setPixel(x + i - a, y - i, color);
+         sleep(200);
+         setPixel(x + i, y + i - a, "white");
+         setPixel(x - i, y - i + a, "white");
+         setPixel(x - i + a, y + i, "white");
+         setPixel(x + i - a, y - i, "white");
+         sleep(10);
+      }
+      sleep(200);
+   }
+}
+
+void triangle(int x, int y, String color) {
+   int b =0;
+   for (int i = 0; i < 6; i ++) {
+   	b+=2;
+      for (int a =0; a < b; a ++) {
+      	setPixel(x+a, y+i-a, color);
+      	setPixel(x-i+a, y-b+a, color);
+      	setPixel(x+b-a, y-i, color);
+      }
+      sleep(500);
+            for (int a =0; a < b; a ++) {
+      	setPixel(x+a, y+i-a, "white");
+      	setPixel(x-i+a, y-b+a, "white");
+      	setPixel(x+b-a, y-i, "white");
+      }
+      sleep(200);
+   }
+}
+
